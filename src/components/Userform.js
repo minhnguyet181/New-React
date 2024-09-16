@@ -1,95 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Form, Button } from 'react-bootstrap';
+import UserList from './UserList';
 
-const UserForm = ({ createUser, updateUser, currentUser }) => {
-  const [user, setUser] = useState({ name: '', email: '', password: '', address: '' });
+const UserForm = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
 
-  useEffect(() => {
-    if (currentUser) {
-      setUser(currentUser);
-    }
-  }, [currentUser]);
+  const API_URL = 'http://localhost:1004'; // Backend API URL
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (user.id) {
-      updateUser(user);
-    } else {
-      createUser(user);
+
+    try {
+      const response = await axios.post(`${API_URL}/users`, { username, email, address });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
     }
-    setUser({ name: '', email: '', password: '', address: '' });
   };
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+  const handleUpdate = async (id, updatedUsername, updatedEmail, updatedAddress) => {
+    try {
+      const response = await axios.put(`${API_URL}/users/${id}`, { username: updatedUsername, email: updatedEmail, address: updatedAddress });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/users/${id}`);
+      console.log('User deleted');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <div className="user-form">
-      <h2>{user.id ? 'Edit User' : 'Add New User'}</h2>
+    <>
       <Form onSubmit={handleSubmit}>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="formName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={user.name}
-                onChange={handleChange}
-                placeholder="Enter name"
-                required
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={user.email}
-                onChange={handleChange}
-                placeholder="Enter email"
-                required
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="formPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                value={user.password}
-                onChange={handleChange}
-                placeholder="Enter password"
-                required
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="formAddress">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                type="text"
-                name="address"
-                value={user.address}
-                onChange={handleChange}
-                placeholder="Enter address"
-                required
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-     
-        <Button variant="primary" type="submit" className="mt-3">
-          {user.id ? 'Update User' : 'Create User'}
+        <Form.Group className="mb-3" controlId="username">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="address">
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+        </Form.Group>
+
+        <Button variant="primary" type="submit">
+          Submit
         </Button>
       </Form>
-    </div>
+      <UserList />
+    </>
   );
 };
 

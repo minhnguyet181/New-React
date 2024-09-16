@@ -1,65 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button } from 'react-bootstrap';
 import axios from 'axios';
+import { Table, Button } from 'react-bootstrap';
 
-const UserList = ({ deleteUser, editUser }) => {
-    const [users, setUsers] = useState([]);
+const UserList = () => {
+  const [users, setUsers] = useState([]);
 
-    // Lấy danh sách người dùng từ API khi component được mount
-    useEffect(() => {
-      axios
-        .get('http://localhost:1004/users') // Địa chỉ API từ backend NestJS
-        .then((response) => {
-          setUsers(response.data); // Cập nhật danh sách người dùng
-        })
-        .catch((error) => {
-          console.error('Error fetching users:', error);
-        });
-    }, []);
+  const API_URL = 'http://localhost:1004'; // Backend API URL
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/users`);
+        setUsers(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const handleEdit = (id, updatedUsername, updatedEmail, updatedAddress) => {
+    handleUpdate(id, updatedUsername, updatedEmail, updatedAddress);
+  };
+
+  const handleDelete = (id) => {
+    handleDeleteUser(id);
+  };
+
   return (
-    <div>
-      <h2 className="mt-4">User List</h2>
-      {users.length === 0 ? (
-        <p>No users available.</p>
-      ) : (
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Adress</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => (
-              <tr key={user.id}>
-                <td>{index + 1}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td> {user.address}</td>
-                <td>
-                  <Button
-                    variant="warning"
-                    onClick={() => editUser(user)}
-                    className="mr-2"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
-    </div>
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user) => (
+          <tr key={user.id}>
+            <td>{user.id}</td>
+            <td>{user.username}</td>
+            <td>{user.email}</td>
+            <td>{user.address}</td>
+            <td>
+              <Button variant="primary" onClick={() => handleEdit(user.id, 'NewUsername', 'NewEmail', 'NewAddress')}>
+                Edit
+              </Button>{' '}
+              <Button variant="danger" onClick={() => handleDelete(user.id)}>
+                Delete
+              </Button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
   );
 };
 
