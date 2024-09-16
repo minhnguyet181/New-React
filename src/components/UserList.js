@@ -20,6 +20,24 @@ const UserList = () => {
     fetchUsers();
   }, []);
 
+  const handleUpdate = async (id, updatedUsername, updatedEmail, updatedAddress) => {
+    try {
+      const response = await axios.put(`${API_URL}/users/${id}`, { username: updatedUsername, email: updatedEmail, address: updatedAddress });
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteUser = async (id) => {
+    try {
+      await axios.delete(`${API_URL}/users/${id}`);
+      console.log('User deleted');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleEdit = (id, updatedUsername, updatedEmail, updatedAddress) => {
     handleUpdate(id, updatedUsername, updatedEmail, updatedAddress);
   };

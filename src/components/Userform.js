@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 import UserList from './UserList';
-
+import './style.css'
 const UserForm = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
 
   const API_URL = 'http://localhost:1004'; // Backend API URL
@@ -16,24 +17,6 @@ const UserForm = () => {
     try {
       const response = await axios.post(`${API_URL}/users`, { username, email, address });
       console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleUpdate = async (id, updatedUsername, updatedEmail, updatedAddress) => {
-    try {
-      const response = await axios.put(`${API_URL}/users/${id}`, { username: updatedUsername, email: updatedEmail, address: updatedAddress });
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`${API_URL}/users/${id}`);
-      console.log('User deleted');
     } catch (error) {
       console.error(error);
     }
@@ -61,7 +44,15 @@ const UserForm = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </Form.Group>
-
+        <Form.Group className="form-group" controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Form.Group>
         <Form.Group className="mb-3" controlId="address">
           <Form.Label>Address</Form.Label>
           <Form.Control
