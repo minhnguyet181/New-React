@@ -27,6 +27,34 @@
 .App-link {
   color: #61dafb;
 }
+.container {
+  max-width: 800px;
+}
+
+form {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+form h2 {
+  margin-bottom: 20px;
+}
+
+form .form-label {
+  font-weight: bold;
+}
+
+form .btn {
+  width: 100%;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.table .btn {
+  margin-right: 5px;
+}
 
 @keyframes App-logo-spin {
   from {
