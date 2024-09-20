@@ -1,25 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-
-const UserList = () => {
-    const [users, setUsers] = useState([]);
-
-    const handleAddUser = (user) => {
-        setUsers([...users, user]);
-    };
-
-    return (
-        <div>
-           {handleAddUser} 
-            {users.map((user, index) => (
-                <div key={index}>
-                    <p>Name: {user.name} | Email: {user.email} | Address: {user.address} | Password: ****</p>
-                    <button>Edit</button>
-                    <button>Delete</button>
-                </div>
-            ))}
-        </div>
-    );
+const UserList = ({ users, onEditUser, onDeleteUser }) => {
+  return (
+    <ul className="user-list">
+      {users.map((user, index) => (
+        <li key={user.id}>
+          <span>
+            {user.name} - {user.email} - {user.address}
+          </span>
+          <button onClick={() => onEditUser(index)}>✏️</button>
+          <button onClick={() => onDeleteUser(user.id)}>🗑️</button>
+        </li>
+      ))}
+    </ul>
+  );
 };
 
 export default UserList;
+
